@@ -1171,7 +1171,9 @@ output_defines(FILE * fp)
     {
 #if ENUM_TOKEN
 	if (2 == i) {
-	    if (fp == code_file) outline += 3;
+	    if (fp == code_file) {
+	        outline += 3;
+	    }
 	    fprintf(fp, "#ifndef YYTOKEN_IS_DECLARED\n");
 	    fprintf(fp, "#define YYTOKEN_IS_DECLARED 1\n");
 	    fprintf(fp, "typedef enum %s_token {\n", symbol_prefix);
@@ -1211,7 +1213,9 @@ output_defines(FILE * fp)
 	}
 #if ENUM_TOKEN
 	if (i + 1 == ntokens) {
-	    if (fp == code_file) outline += 2;
+	    if (fp == code_file) {
+	        outline += 2;
+	    }
 	    fprintf(fp, "} %s_token;\n", symbol_prefix);
 	    fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
 	}
