@@ -615,7 +615,7 @@ copy_union(void)
 
     if (!lflag)
 	fprintf(text_file, line_format, lineno, input_file_name);
-    puts_both("typedef union");
+    puts_both("typedef union YYSTYPE");
 
     depth = 0;
   loop:
