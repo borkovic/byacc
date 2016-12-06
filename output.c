@@ -1184,7 +1184,7 @@ output_defines(FILE * fp)
 	if (is_C_identifier(s) && (!sflag || *s != '"'))
 	{
 #if ENUM_TOKEN
-	    fprintf(fp, "  ");
+	    fprintf(fp, "    ");
 #else
 	    fprintf(fp, "#define ");
 #endif
