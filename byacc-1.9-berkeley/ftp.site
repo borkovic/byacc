@@ -1,2 +1,6 @@
+Berkeley FTP site for original source
 ftp://ftp.cs.berkeley.edu/ucb/4bsd/
 ftp://ftp.cs.berkeley.edu/ucb/4bsd/byacc.tar.Z
+
+Drazen's old comment about bug in pack_vector()
+http://compilers.iecc.com/comparch/article/99-01-103
