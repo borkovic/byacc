@@ -1200,7 +1200,7 @@ end_defines_file(void)
 #define end_defines_file()	/* nothing */
 #endif
 
-#define ENUM_TOKEN 1
+enum { ENUM_TOKEN = 1 };
 
 static void
 output_defines(FILE * fp)
@@ -1208,27 +1208,27 @@ output_defines(FILE * fp)
     int c, i;
     char *s;
 
-#if ENUM_TOKEN
-	if (ntokens > 2) {
-	    if (fp == code_file) {
-	        outline += 3;
+	if(ENUM_TOKEN) {
+	    if (ntokens > 2) {
+	        if (fp == code_file) {
+	            outline += 3;
+	        }
+	        fprintf(fp, "#ifndef YYTOKEN_IS_DECLARED\n");
+	        fprintf(fp, "#define YYTOKEN_IS_DECLARED 1\n");
+	        fprintf(fp, "typedef enum %stoken {\n", symbol_prefix);
 	    }
-	    fprintf(fp, "#ifndef YYTOKEN_IS_DECLARED\n");
-	    fprintf(fp, "#define YYTOKEN_IS_DECLARED 1\n");
-	    fprintf(fp, "typedef enum %stoken {\n", symbol_prefix);
 	}
-#endif
 
     for (i = 2; i < ntokens; ++i)
     {
 	s = symbol_name[i];
 	if (is_C_identifier(s) && (!sflag || *s != '"'))
 	{
-#if ENUM_TOKEN
-	    fprintf(fp, "    ");
-#else
-	    fprintf(fp, "#define ");
-#endif
+	    if (ENUM_TOKEN) {
+	        fprintf(fp, "    ");
+	    } else {
+	        fprintf(fp, "#define ");
+	    }
 	    c = *s;
 	    if (c == '"')
 	    {
@@ -1255,15 +1255,15 @@ output_defines(FILE * fp)
 	}
     }
 
-#if ENUM_TOKEN
-	if (ntokens > 2) {
-	    if (fp == code_file) {
-	        outline += 2;
+	if(ENUM_TOKEN) {
+	    if (ntokens > 2) {
+	        if (fp == code_file) {
+	            outline += 2;
+	        }
+	        fprintf(fp, "} %stoken;\n", symbol_prefix);
+	        fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
 	    }
-	    fprintf(fp, "} %stoken;\n", symbol_prefix);
-	    fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
 	}
-#endif
 
     if (fp == code_file)
 	++outline;
