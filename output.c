@@ -1255,16 +1255,16 @@ output_defines(FILE * fp)
 	}
     }
 
-	if (ENUM_TOKEN) {
-	    if (ntokens > 2) {
-		if (fp == code_file) {
-		    outline += 2;
-		}
-		/* { */
-		fprintf(fp, "} %stoken;\n", symbol_prefix);
-		fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
+    if (ENUM_TOKEN) {
+	if (ntokens > 2) {
+	    if (fp == code_file) {
+		outline += 2;
 	    }
+	    /* { */
+	    fprintf(fp, "} %stoken;\n", symbol_prefix);
+	    fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
 	}
+    }
 
     if (fp == code_file)
 	++outline;
