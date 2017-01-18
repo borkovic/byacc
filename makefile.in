@@ -68,21 +68,23 @@ C_FILES = \
 	verbose.c \
 	warshall.c
 
+ObjDir=obj
+
 OBJS	= \
-	closure$o \
-	error$o \
-	graph$o \
-	lalr$o \
-	lr0$o \
-	main$o \
-	mkpar$o \
-	mstring$o \
-	output$o \
-	reader$o \
-	$(SKELETON)$o \
-	symtab$o \
-	verbose$o \
-	warshall$o
+	$(ObjDir)/closure$o \
+	$(ObjDir)/error$o \
+	$(ObjDir)/graph$o \
+	$(ObjDir)/lalr$o \
+	$(ObjDir)/lr0$o \
+	$(ObjDir)/main$o \
+	$(ObjDir)/mkpar$o \
+	$(ObjDir)/mstring$o \
+	$(ObjDir)/output$o \
+	$(ObjDir)/reader$o \
+	$(ObjDir)/$(SKELETON)$o \
+	$(ObjDir)/symtab$o \
+	$(ObjDir)/verbose$o \
+	$(ObjDir)/warshall$o
 
 YACCPAR	= \
 	btyaccpar.c \
@@ -111,7 +113,7 @@ uninstall:
 ################################################################################
 .SUFFIXES : .c $o .i .skel
 
-.c$o:
+$(ObjDir)/%.o : %.c
 	@RULE_CC@
 	@ECHO_CC@$(CC) -c $(CFLAGS) $<
 
@@ -169,7 +171,7 @@ depend:
 
 $(OBJS) : defs.h makefile
 
-main$o \
-$(SKELETON)$o : VERSION
+$(ObjDir)/main$o \
+$(ObjDir)/$(SKELETON)$o : VERSION
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
