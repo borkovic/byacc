@@ -1259,7 +1259,7 @@ output_defines(FILE * fp)
 	    } else {
 		fprintf(fp, " %d\n", symbol_value[i]);
 	    }
-            first_symbol = 0;
+	    first_symbol = 0;
 	}
     }
 
