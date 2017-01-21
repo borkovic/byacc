@@ -1218,7 +1218,8 @@ output_defines(FILE * fp)
 	    fprintf(fp, "#ifndef YYTOKEN_IS_DECLARED\n");
 	    fprintf(fp, "#define YYTOKEN_IS_DECLARED 1\n");
 	    snprintf(enum_name, sizeof_array(enum_name)-1, "%stoken", symbol_prefix);
-	    fprintf(fp, "typedef enum %s {\n", enum_name); /* } */
+	    fprintf(fp, "typedef enum %s {\n", enum_name);
+	    /* } */
 	}
     }
 
