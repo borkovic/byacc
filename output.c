@@ -1207,6 +1207,8 @@ output_defines(FILE * fp)
 {
     int c, i;
     char *s;
+    int first_symbol = 1;
+    char enum_name[256];
 
     if(ENUM_TOKEN) {
 	if (ntokens > 2) {
@@ -1215,7 +1217,8 @@ output_defines(FILE * fp)
 	    }
 	    fprintf(fp, "#ifndef YYTOKEN_IS_DECLARED\n");
 	    fprintf(fp, "#define YYTOKEN_IS_DECLARED 1\n");
-	    fprintf(fp, "typedef enum %stoken {\n", symbol_prefix); /* } */
+	    snprintf(enum_name, sizeof_array(enum_name)-1, "%stoken", symbol_prefix);
+	    fprintf(fp, "typedef enum %s {\n", enum_name); /* } */
 	}
     }
 
@@ -1225,7 +1228,11 @@ output_defines(FILE * fp)
 	if (is_C_identifier(s) && (!sflag || *s != '"'))
 	{
 	    if (ENUM_TOKEN) {
-		fprintf(fp, "    ");
+		if (first_symbol) {
+		    fprintf(fp, "    ");
+		} else {
+		    fprintf(fp, ",\n    ");
+		}
 	    } else {
 		fprintf(fp, "#define ");
 	    }
@@ -1248,10 +1255,11 @@ output_defines(FILE * fp)
 	    if (fp == code_file)
 		++outline;
 	    if (ENUM_TOKEN) {
-		fprintf(fp, " = %d,\n", symbol_value[i]);
+		fprintf(fp, " = %d", symbol_value[i]);
 	    } else {
 		fprintf(fp, " %d\n", symbol_value[i]);
 	    }
+            first_symbol = 0;
 	}
     }
 
@@ -1261,7 +1269,7 @@ output_defines(FILE * fp)
 		outline += 2;
 	    }
 	    /* { */
-	    fprintf(fp, "} %stoken;\n", symbol_prefix);
+	    fprintf(fp, "\n} %s;\n", enum_name);
 	    fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
 	}
     }

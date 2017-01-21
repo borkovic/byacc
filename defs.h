@@ -155,6 +155,7 @@
 #define ISTOKEN(s)	((s) < start_symbol)
 #define ISVAR(s)	((s) >= start_symbol)
 
+#define sizeof_array(arr) (sizeof(arr) / sizeof((arr)[0]))
 /*  storage allocation macros  */
 
 #define CALLOC(k,n)	(calloc((size_t)(k),(size_t)(n)))
