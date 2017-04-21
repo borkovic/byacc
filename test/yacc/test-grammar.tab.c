@@ -419,7 +419,7 @@ extern int YYPARSE_DECL();
 
 #ifndef YYTOKEN_IS_DECLARED
 #define YYTOKEN_IS_DECLARED 1
-typedef enum grammar__token {
+typedef enum grammar_token {
     T_IDENTIFIER = 257,
     T_TYPEDEF_NAME = 258,
     T_DEFINE_NAME = 259,
@@ -454,8 +454,8 @@ typedef enum grammar__token {
     T_STRING_LITERAL = 288,
     T_ASM = 289,
     T_ASMARG = 290,
-    T_VA_DCL = 291,
-} grammar__token;
+    T_VA_DCL = 291
+} grammar_token;
 #endif /* !YYTOKEN_IS_DECLARED */
 #define YYERRCODE 256
 typedef short YYINT;

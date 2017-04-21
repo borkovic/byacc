@@ -148,7 +148,7 @@ extern int YYPARSE_DECL();
 
 #ifndef YYTOKEN_IS_DECLARED
 #define YYTOKEN_IS_DECLARED 1
-typedef enum quote_calc2__token {
+typedef enum quote_calc2_token {
     OP_ADD = 257,
     OP_SUB = 259,
     OP_MUL = 261,
@@ -157,8 +157,8 @@ typedef enum quote_calc2__token {
     OP_AND = 267,
     DIGIT = 269,
     LETTER = 270,
-    UMINUS = 271,
-} quote_calc2__token;
+    UMINUS = 271
+} quote_calc2_token;
 #endif /* !YYTOKEN_IS_DECLARED */
 #define YYERRCODE 256
 typedef short YYINT;

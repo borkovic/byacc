@@ -1,11 +1,11 @@
 #ifndef YYTOKEN_IS_DECLARED
 #define YYTOKEN_IS_DECLARED 1
-typedef enum varsyntax_calc1__token {
+typedef enum varsyntax_calc1_token {
     DREG = 257,
     VREG = 258,
     CONST = 259,
-    UMINUS = 260,
-} varsyntax_calc1__token;
+    UMINUS = 260
+} varsyntax_calc1_token;
 #endif /* !YYTOKEN_IS_DECLARED */
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED

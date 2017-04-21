@@ -172,12 +172,12 @@ extern int YYPARSE_DECL();
 
 #ifndef YYTOKEN_IS_DECLARED
 #define YYTOKEN_IS_DECLARED 1
-typedef enum calc1__token {
+typedef enum calc1_token {
     DREG = 257,
     VREG = 258,
     CONST = 259,
-    UMINUS = 260,
-} calc1__token;
+    UMINUS = 260
+} calc1_token;
 #endif /* !YYTOKEN_IS_DECLARED */
 #define YYERRCODE 256
 typedef short YYINT;

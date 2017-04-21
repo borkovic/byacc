@@ -1,6 +1,6 @@
 #ifndef YYTOKEN_IS_DECLARED
 #define YYTOKEN_IS_DECLARED 1
-typedef enum quote_calc__token {
+typedef enum quote_calc_token {
     OP_ADD = 257,
     ADD = 258,
     OP_SUB = 259,
@@ -15,6 +15,6 @@ typedef enum quote_calc__token {
     AND = 268,
     DIGIT = 269,
     LETTER = 270,
-    UMINUS = 271,
-} quote_calc__token;
+    UMINUS = 271
+} quote_calc_token;
 #endif /* !YYTOKEN_IS_DECLARED */

@@ -115,7 +115,7 @@ uninstall:
 
 $(ObjDir)/%.o : %.c
 	@RULE_CC@
-	@ECHO_CC@$(CC) -c $(CFLAGS) $<
+	@ECHO_CC@$(CC) -c $(CFLAGS) -o $@ $<
 
 .c.i :
 	@RULE_CC@
