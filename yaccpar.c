@@ -2,7 +2,7 @@
  * @Id: skel2c,v 1.4 2016/06/07 00:26:09 tom Exp @
  */
 
-/* @Id: yaccpar.skel,v 1.8 2016/12/02 21:44:42 tom Exp @ */
+/* @Id: yaccpar.skel,v 1.7 2016/06/06 23:35:55 Tom.Shields Exp @ */
 
 #include "defs.h"
 
