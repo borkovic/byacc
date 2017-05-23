@@ -1,26 +1,31 @@
-#define DIGIT 257
-#define LETTER 258
-#define OCT1 259
-#define HEX1 260
-#define HEX2 261
-#define HEX3 262
-#define STR1 263
-#define STR2 265
-#define BELL 266
-#define BS 267
-#define NL 268
-#define LF 269
-#define CR 270
-#define TAB 271
-#define VT 272
-#define UMINUS 273
+#ifndef YYTOKEN_IS_DECLARED
+#define YYTOKEN_IS_DECLARED 1
+typedef enum ok_syntax1_token {
+    DIGIT = 257,
+    LETTER = 258,
+    OCT1 = 259,
+    HEX1 = 260,
+    HEX2 = 261,
+    HEX3 = 262,
+    STR1 = 263,
+    STR2 = 265,
+    BELL = 266,
+    BS = 267,
+    NL = 268,
+    LF = 269,
+    CR = 270,
+    TAB = 271,
+    VT = 272,
+    UMINUS = 273
+} ok_syntax1_token;
+#endif /* !YYTOKEN_IS_DECLARED */
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
 #endif
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
-typedef union
+typedef union YYSTYPE
 {
     char *	cval;
     int		ival;
