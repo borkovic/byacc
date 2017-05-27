@@ -15,87 +15,87 @@
 #define YYEOF          0
 
 #ifndef yyparse
-#define yyparse    calc_parse
+#define yyparse    pure_calc_parse
 #endif /* yyparse */
 
 #ifndef yylex
-#define yylex      calc_lex
+#define yylex      pure_calc_lex
 #endif /* yylex */
 
 #ifndef yyerror
-#define yyerror    calc_error
+#define yyerror    pure_calc_error
 #endif /* yyerror */
 
 #ifndef yychar
-#define yychar     calc_char
+#define yychar     pure_calc_char
 #endif /* yychar */
 
 #ifndef yyval
-#define yyval      calc_val
+#define yyval      pure_calc_val
 #endif /* yyval */
 
 #ifndef yylval
-#define yylval     calc_lval
+#define yylval     pure_calc_lval
 #endif /* yylval */
 
 #ifndef yydebug
-#define yydebug    calc_debug
+#define yydebug    pure_calc_debug
 #endif /* yydebug */
 
 #ifndef yynerrs
-#define yynerrs    calc_nerrs
+#define yynerrs    pure_calc_nerrs
 #endif /* yynerrs */
 
 #ifndef yyerrflag
-#define yyerrflag  calc_errflag
+#define yyerrflag  pure_calc_errflag
 #endif /* yyerrflag */
 
 #ifndef yylhs
-#define yylhs      calc_lhs
+#define yylhs      pure_calc_lhs
 #endif /* yylhs */
 
 #ifndef yylen
-#define yylen      calc_len
+#define yylen      pure_calc_len
 #endif /* yylen */
 
 #ifndef yydefred
-#define yydefred   calc_defred
+#define yydefred   pure_calc_defred
 #endif /* yydefred */
 
 #ifndef yydgoto
-#define yydgoto    calc_dgoto
+#define yydgoto    pure_calc_dgoto
 #endif /* yydgoto */
 
 #ifndef yysindex
-#define yysindex   calc_sindex
+#define yysindex   pure_calc_sindex
 #endif /* yysindex */
 
 #ifndef yyrindex
-#define yyrindex   calc_rindex
+#define yyrindex   pure_calc_rindex
 #endif /* yyrindex */
 
 #ifndef yygindex
-#define yygindex   calc_gindex
+#define yygindex   pure_calc_gindex
 #endif /* yygindex */
 
 #ifndef yytable
-#define yytable    calc_table
+#define yytable    pure_calc_table
 #endif /* yytable */
 
 #ifndef yycheck
-#define yycheck    calc_check
+#define yycheck    pure_calc_check
 #endif /* yycheck */
 
 #ifndef yyname
-#define yyname     calc_name
+#define yyname     pure_calc_name
 #endif /* yyname */
 
 #ifndef yyrule
-#define yyrule     calc_rule
+#define yyrule     pure_calc_rule
 #endif /* yyrule */
-#define YYPREFIX "calc_"
+#define YYPREFIX "pure_calc_"
 
-#define YYPURE 1
+#define YYPURE 0
 
 #line 2 "pure_calc.y"
 # include <stdio.h>
@@ -135,15 +135,11 @@ typedef int YYSTYPE;
 
 /* Parameters sent to lex. */
 #ifdef YYLEX_PARAM
-# ifdef YYLEX_PARAM_TYPE
-#  define YYLEX_DECL() yylex(YYSTYPE *yylval, YYLEX_PARAM_TYPE YYLEX_PARAM)
-# else
-#  define YYLEX_DECL() yylex(YYSTYPE *yylval, void * YYLEX_PARAM)
-# endif
-# define YYLEX yylex(&yylval, YYLEX_PARAM)
+# define YYLEX_DECL() yylex(void *YYLEX_PARAM)
+# define YYLEX yylex(YYLEX_PARAM)
 #else
-# define YYLEX_DECL() yylex(YYSTYPE *yylval)
-# define YYLEX yylex(&yylval)
+# define YYLEX_DECL() yylex(void)
+# define YYLEX yylex()
 #endif
 
 /* Parameters sent to yyerror. */
@@ -156,45 +152,50 @@ typedef int YYSTYPE;
 
 extern int YYPARSE_DECL();
 
-#define DIGIT 257
-#define LETTER 258
-#define UMINUS 259
+#ifndef YYTOKEN_IS_DECLARED
+#define YYTOKEN_IS_DECLARED 1
+typedef enum pure_calc_token {
+    DIGIT = 257,
+    LETTER = 258,
+    UMINUS = 259
+} pure_calc_token;
+#endif /* !YYTOKEN_IS_DECLARED */
 #define YYERRCODE 256
 typedef short YYINT;
-static const YYINT calc_lhs[] = {                        -1,
+static const YYINT pure_calc_lhs[] = {                   -1,
     0,    0,    0,    1,    1,    2,    2,    2,    2,    2,
     2,    2,    2,    2,    2,    2,    3,    3,
 };
-static const YYINT calc_len[] = {                         2,
+static const YYINT pure_calc_len[] = {                    2,
     0,    3,    3,    1,    3,    3,    3,    3,    3,    3,
     3,    3,    3,    2,    1,    1,    1,    2,
 };
-static const YYINT calc_defred[] = {                      1,
+static const YYINT pure_calc_defred[] = {                 1,
     0,    0,   17,    0,    0,    0,    0,    0,    0,    3,
     0,   15,   14,    0,    2,    0,    0,    0,    0,    0,
     0,    0,   18,    0,    6,    0,    0,    0,    0,    9,
    10,   11,
 };
-static const YYINT calc_dgoto[] = {                       1,
+static const YYINT pure_calc_dgoto[] = {                  1,
     7,    8,    9,
 };
-static const YYINT calc_sindex[] = {                      0,
+static const YYINT pure_calc_sindex[] = {                 0,
   -40,   -7,    0,  -55,  -38,  -38,    1,  -29, -247,    0,
   -38,    0,    0,   22,    0,  -38,  -38,  -38,  -38,  -38,
   -38,  -38,    0,  -29,    0,   51,   60,  -20,  -20,    0,
     0,    0,
 };
-static const YYINT calc_rindex[] = {                      0,
+static const YYINT pure_calc_rindex[] = {                 0,
     0,    0,    0,    2,    0,    0,    0,    9,   -9,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,   10,    0,   -6,   14,    5,   13,    0,
     0,    0,
 };
-static const YYINT calc_gindex[] = {                      0,
+static const YYINT pure_calc_gindex[] = {                 0,
     0,   65,    0,
 };
 #define YYTABLESIZE 220
-static const YYINT calc_table[] = {                       6,
+static const YYINT pure_calc_table[] = {                  6,
    16,    6,   10,   13,    5,   11,    5,   22,   17,   23,
    15,   15,   20,   18,    7,   19,   22,   21,    4,    5,
     0,   20,    8,   12,    0,    0,   21,   16,   16,    0,
@@ -218,7 +219,7 @@ static const YYINT calc_table[] = {                       6,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    2,    3,    4,    3,   12,
 };
-static const YYINT calc_check[] = {                      40,
+static const YYINT pure_calc_check[] = {                 40,
    10,   40,   10,   10,   45,   61,   45,   37,   38,  257,
    10,   10,   42,   43,   10,   45,   37,   47,   10,   10,
    -1,   42,   10,   10,   -1,   -1,   47,   37,   38,   -1,
@@ -250,7 +251,7 @@ static const YYINT calc_check[] = {                      40,
 #define YYUNDFTOKEN 265
 #define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? YYUNDFTOKEN : (a))
 #if YYDEBUG
-static const char *const calc_name[] = {
+static const char *const pure_calc_name[] = {
 
 "end-of-file",0,0,0,0,0,0,0,0,0,"'\\n'",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,"'%'","'&'",0,"'('","')'","'*'","'+'",0,"'-'",0,"'/'",0,0,0,0,0,0,0,
@@ -261,7 +262,7 @@ static const char *const calc_name[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,"DIGIT","LETTER","UMINUS",0,0,0,0,0,"illegal-symbol",
 };
-static const char *const calc_rule[] = {
+static const char *const pure_calc_rule[] = {
 "$accept : list",
 "list :",
 "list : list stat '\\n'",
@@ -288,6 +289,11 @@ static const char *const calc_rule[] = {
 int      yydebug;
 int      yynerrs;
 
+int      yyerrflag;
+int      yychar;
+YYSTYPE  yyval;
+YYSTYPE  yylval;
+
 /* define the initial stack-sizes */
 #ifdef YYSTACKSIZE
 #undef YYMAXDEPTH
@@ -311,6 +317,8 @@ typedef struct {
     YYSTYPE  *l_base;
     YYSTYPE  *l_mark;
 } YYSTACKDATA;
+/* variables for the parser stack */
+static YYSTACKDATA yystack;
 #line 72 "pure_calc.y"
  /* start of programs */
 
@@ -357,7 +365,7 @@ YYLEX_DECL()
     }
     return( c );
 }
-#line 361 "pure_calc.tab.c"
+#line 369 "pure_calc.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>	/* needed for printf */
@@ -420,13 +428,6 @@ static void yyfreestack(YYSTACKDATA *data)
 int
 YYPARSE_DECL()
 {
-    int      yyerrflag;
-    int      yychar;
-    YYSTYPE  yyval;
-    YYSTYPE  yylval;
-
-    /* variables for the parser stack */
-    YYSTACKDATA yystack;
     int yym, yyn, yystate;
 #if YYDEBUG
     const char *yys;
@@ -453,22 +454,26 @@ YYPARSE_DECL()
     memset(&yystack, 0, sizeof(yystack));
 #endif
 
-    if (yystack.s_base == NULL && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
+    if (yystack.s_base == NULL && yygrowstack(&yystack) == YYENOMEM)
+        goto yyoverflow;
     yystack.s_mark = yystack.s_base;
     yystack.l_mark = yystack.l_base;
     yystate = 0;
     *yystack.s_mark = 0;
 
 yyloop:
-    if ((yyn = yydefred[yystate]) != 0) goto yyreduce;
+    if ((yyn = yydefred[yystate]) != 0)
+        goto yyreduce;
     if (yychar < 0)
     {
         yychar = YYLEX;
-        if (yychar < 0) yychar = YYEOF;
+        if (yychar < 0)
+            yychar = YYEOF;
 #if YYDEBUG
         if (yydebug)
         {
-            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];
+            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL)
+                yys = yyname[YYUNDFTOKEN];
             printf("%sdebug: state %d, reading %d (%s)\n",
                     YYPREFIX, yystate, yychar, yys);
         }
@@ -482,12 +487,14 @@ yyloop:
             printf("%sdebug: state %d, shifting to state %d\n",
                     YYPREFIX, yystate, yytable[yyn]);
 #endif
-        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
+        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM)
+            goto yyoverflow;
         yystate = yytable[yyn];
         *++yystack.s_mark = yytable[yyn];
         *++yystack.l_mark = yylval;
         yychar = YYEMPTY;
-        if (yyerrflag > 0)  --yyerrflag;
+        if (yyerrflag > 0)
+            --yyerrflag;
         goto yyloop;
     }
     if (((yyn = yyrindex[yystate]) != 0) && (yyn += yychar) >= 0 &&
@@ -496,7 +503,8 @@ yyloop:
         yyn = yytable[yyn];
         goto yyreduce;
     }
-    if (yyerrflag != 0) goto yyinrecovery;
+    if (yyerrflag != 0)
+        goto yyinrecovery;
 
     YYERROR_CALL("syntax error");
 
@@ -518,7 +526,8 @@ yyinrecovery:
                     printf("%sdebug: state %d, error recovery shifting\
  to state %d\n", YYPREFIX, *yystack.s_mark, yytable[yyn]);
 #endif
-                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
+                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM)
+                    goto yyoverflow;
                 yystate = yytable[yyn];
                 *++yystack.s_mark = yytable[yyn];
                 *++yystack.l_mark = yylval;
@@ -531,7 +540,8 @@ yyinrecovery:
                     printf("%sdebug: error recovery discarding state %d\n",
                             YYPREFIX, *yystack.s_mark);
 #endif
-                if (yystack.s_mark <= yystack.s_base) goto yyabort;
+                if (yystack.s_mark <= yystack.s_base)
+                    goto yyabort;
                 --yystack.s_mark;
                 --yystack.l_mark;
             }
@@ -539,11 +549,13 @@ yyinrecovery:
     }
     else
     {
-        if (yychar == YYEOF) goto yyabort;
+        if (yychar == YYEOF)
+            goto yyabort;
 #if YYDEBUG
         if (yydebug)
         {
-            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];
+            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL)
+                yys = yyname[YYUNDFTOKEN];
             printf("%sdebug: state %d, error recovery discards token %d (%s)\n",
                     YYPREFIX, yystate, yychar, yys);
         }
@@ -626,7 +638,7 @@ case 18:
 #line 69 "pure_calc.y"
 	{  yyval = base * yystack.l_mark[-1] + yystack.l_mark[0]; }
 break;
-#line 630 "pure_calc.tab.c"
+#line 639 "pure_calc.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;
@@ -645,17 +657,20 @@ break;
         if (yychar < 0)
         {
             yychar = YYLEX;
-            if (yychar < 0) yychar = YYEOF;
+            if (yychar < 0)
+                yychar = YYEOF;
 #if YYDEBUG
             if (yydebug)
             {
-                if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];
+                if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL)
+                    yys = yyname[YYUNDFTOKEN];
                 printf("%sdebug: state %d, reading %d (%s)\n",
                         YYPREFIX, YYFINAL, yychar, yys);
             }
 #endif
         }
-        if (yychar == YYEOF) goto yyaccept;
+        if (yychar == YYEOF)
+            goto yyaccept;
         goto yyloop;
     }
     if (((yyn = yygindex[yym]) != 0) && (yyn += yystate) >= 0 &&
@@ -668,7 +683,8 @@ break;
         printf("%sdebug: after reduction, shifting from state %d \
 to state %d\n", YYPREFIX, *yystack.s_mark, yystate);
 #endif
-    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
+    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM)
+        goto yyoverflow;
     *++yystack.s_mark = (YYINT) yystate;
     *++yystack.l_mark = yyval;
     goto yyloop;

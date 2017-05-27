@@ -1,14 +1,19 @@
-#define DREG 257
-#define VREG 258
-#define CONST 259
-#define UMINUS 260
+#ifndef YYTOKEN_IS_DECLARED
+#define YYTOKEN_IS_DECLARED 1
+typedef enum varsyntax_calc1_token {
+    DREG = 257,
+    VREG = 258,
+    CONST = 259,
+    UMINUS = 260
+} varsyntax_calc1_token;
+#endif /* !YYTOKEN_IS_DECLARED */
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
 #endif
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
-typedef union
+typedef union YYSTYPE
 {
 	int ival;	/* dreg & vreg array index values*/
 	double dval;	/* floating point values*/
