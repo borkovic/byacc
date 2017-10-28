@@ -417,46 +417,41 @@ haveAnsiParam (void)
 
 extern int YYPARSE_DECL();
 
-#ifndef YYTOKEN_IS_DECLARED
-#define YYTOKEN_IS_DECLARED 1
-typedef enum grammar_token {
-    T_IDENTIFIER = 257,
-    T_TYPEDEF_NAME = 258,
-    T_DEFINE_NAME = 259,
-    T_AUTO = 260,
-    T_EXTERN = 261,
-    T_REGISTER = 262,
-    T_STATIC = 263,
-    T_TYPEDEF = 264,
-    T_INLINE = 265,
-    T_EXTENSION = 266,
-    T_CHAR = 267,
-    T_DOUBLE = 268,
-    T_FLOAT = 269,
-    T_INT = 270,
-    T_VOID = 271,
-    T_LONG = 272,
-    T_SHORT = 273,
-    T_SIGNED = 274,
-    T_UNSIGNED = 275,
-    T_ENUM = 276,
-    T_STRUCT = 277,
-    T_UNION = 278,
-    T_Bool = 279,
-    T_Complex = 280,
-    T_Imaginary = 281,
-    T_TYPE_QUALIFIER = 282,
-    T_BRACKETS = 283,
-    T_LBRACE = 284,
-    T_MATCHRBRACE = 285,
-    T_ELLIPSIS = 286,
-    T_INITIALIZER = 287,
-    T_STRING_LITERAL = 288,
-    T_ASM = 289,
-    T_ASMARG = 290,
-    T_VA_DCL = 291
-} grammar_token;
-#endif /* !YYTOKEN_IS_DECLARED */
+#define T_IDENTIFIER 257
+#define T_TYPEDEF_NAME 258
+#define T_DEFINE_NAME 259
+#define T_AUTO 260
+#define T_EXTERN 261
+#define T_REGISTER 262
+#define T_STATIC 263
+#define T_TYPEDEF 264
+#define T_INLINE 265
+#define T_EXTENSION 266
+#define T_CHAR 267
+#define T_DOUBLE 268
+#define T_FLOAT 269
+#define T_INT 270
+#define T_VOID 271
+#define T_LONG 272
+#define T_SHORT 273
+#define T_SIGNED 274
+#define T_UNSIGNED 275
+#define T_ENUM 276
+#define T_STRUCT 277
+#define T_UNION 278
+#define T_Bool 279
+#define T_Complex 280
+#define T_Imaginary 281
+#define T_TYPE_QUALIFIER 282
+#define T_BRACKETS 283
+#define T_LBRACE 284
+#define T_MATCHRBRACE 285
+#define T_ELLIPSIS 286
+#define T_INITIALIZER 287
+#define T_STRING_LITERAL 288
+#define T_ASM 289
+#define T_ASMARG 290
+#define T_VA_DCL 291
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT grammar_lhs[] = {                     -1,
@@ -1093,7 +1088,7 @@ free_parser(void)
 #endif
 }
 #endif
-#line 1097 "grammar.tab.c"
+#line 1092 "grammar.tab.c"
 
 #if YYDEBUG
 #include <stdio.h>	/* needed for printf */
@@ -1179,26 +1174,22 @@ YYPARSE_DECL()
     memset(&yystack, 0, sizeof(yystack));
 #endif
 
-    if (yystack.s_base == NULL && yygrowstack(&yystack) == YYENOMEM)
-        goto yyoverflow;
+    if (yystack.s_base == NULL && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
     yystack.s_mark = yystack.s_base;
     yystack.l_mark = yystack.l_base;
     yystate = 0;
     *yystack.s_mark = 0;
 
 yyloop:
-    if ((yyn = yydefred[yystate]) != 0)
-        goto yyreduce;
+    if ((yyn = yydefred[yystate]) != 0) goto yyreduce;
     if (yychar < 0)
     {
         yychar = YYLEX;
-        if (yychar < 0)
-            yychar = YYEOF;
+        if (yychar < 0) yychar = YYEOF;
 #if YYDEBUG
         if (yydebug)
         {
-            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL)
-                yys = yyname[YYUNDFTOKEN];
+            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];
             printf("%sdebug: state %d, reading %d (%s)\n",
                     YYPREFIX, yystate, yychar, yys);
         }
@@ -1212,14 +1203,12 @@ yyloop:
             printf("%sdebug: state %d, shifting to state %d\n",
                     YYPREFIX, yystate, yytable[yyn]);
 #endif
-        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM)
-            goto yyoverflow;
+        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
         yystate = yytable[yyn];
         *++yystack.s_mark = yytable[yyn];
         *++yystack.l_mark = yylval;
         yychar = YYEMPTY;
-        if (yyerrflag > 0)
-            --yyerrflag;
+        if (yyerrflag > 0)  --yyerrflag;
         goto yyloop;
     }
     if (((yyn = yyrindex[yystate]) != 0) && (yyn += yychar) >= 0 &&
@@ -1228,8 +1217,7 @@ yyloop:
         yyn = yytable[yyn];
         goto yyreduce;
     }
-    if (yyerrflag != 0)
-        goto yyinrecovery;
+    if (yyerrflag != 0) goto yyinrecovery;
 
     YYERROR_CALL("syntax error");
 
@@ -1251,8 +1239,7 @@ yyinrecovery:
                     printf("%sdebug: state %d, error recovery shifting\
  to state %d\n", YYPREFIX, *yystack.s_mark, yytable[yyn]);
 #endif
-                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM)
-                    goto yyoverflow;
+                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
                 yystate = yytable[yyn];
                 *++yystack.s_mark = yytable[yyn];
                 *++yystack.l_mark = yylval;
@@ -1265,8 +1252,7 @@ yyinrecovery:
                     printf("%sdebug: error recovery discarding state %d\n",
                             YYPREFIX, *yystack.s_mark);
 #endif
-                if (yystack.s_mark <= yystack.s_base)
-                    goto yyabort;
+                if (yystack.s_mark <= yystack.s_base) goto yyabort;
                 --yystack.s_mark;
                 --yystack.l_mark;
             }
@@ -1274,13 +1260,11 @@ yyinrecovery:
     }
     else
     {
-        if (yychar == YYEOF)
-            goto yyabort;
+        if (yychar == YYEOF) goto yyabort;
 #if YYDEBUG
         if (yydebug)
         {
-            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL)
-                yys = yyname[YYUNDFTOKEN];
+            if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];
             printf("%sdebug: state %d, error recovery discards token %d (%s)\n",
                     YYPREFIX, yystate, yychar, yys);
         }
@@ -1977,7 +1961,7 @@ case 114:
 	    yyval.declarator->func_def = FUNC_ANSI;
 	}
 break;
-#line 1981 "grammar.tab.c"
+#line 1965 "grammar.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;
@@ -1996,20 +1980,17 @@ break;
         if (yychar < 0)
         {
             yychar = YYLEX;
-            if (yychar < 0)
-                yychar = YYEOF;
+            if (yychar < 0) yychar = YYEOF;
 #if YYDEBUG
             if (yydebug)
             {
-                if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL)
-                    yys = yyname[YYUNDFTOKEN];
+                if ((yys = yyname[YYTRANSLATE(yychar)]) == NULL) yys = yyname[YYUNDFTOKEN];
                 printf("%sdebug: state %d, reading %d (%s)\n",
                         YYPREFIX, YYFINAL, yychar, yys);
             }
 #endif
         }
-        if (yychar == YYEOF)
-            goto yyaccept;
+        if (yychar == YYEOF) goto yyaccept;
         goto yyloop;
     }
     if (((yyn = yygindex[yym]) != 0) && (yyn += yystate) >= 0 &&
@@ -2022,8 +2003,7 @@ break;
         printf("%sdebug: after reduction, shifting from state %d \
 to state %d\n", YYPREFIX, *yystack.s_mark, yystate);
 #endif
-    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM)
-        goto yyoverflow;
+    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack) == YYENOMEM) goto yyoverflow;
     *++yystack.s_mark = (YYINT) yystate;
     *++yystack.l_mark = yyval;
     goto yyloop;

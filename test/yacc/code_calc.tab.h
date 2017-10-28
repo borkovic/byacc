@@ -1,8 +1,5 @@
-#ifndef YYTOKEN_IS_DECLARED
-#define YYTOKEN_IS_DECLARED 1
-typedef enum code_calc_token {
-    DIGIT = 257,
-    LETTER = 258,
-    UMINUS = 259
-} code_calc_token;
-#endif /* !YYTOKEN_IS_DECLARED */
+#define DIGIT 257
+#define LETTER 258
+#define UMINUS 259
+#undef yytname
+#define yytname yyname

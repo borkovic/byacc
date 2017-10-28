@@ -1,20 +1,15 @@
-#ifndef YYTOKEN_IS_DECLARED
-#define YYTOKEN_IS_DECLARED 1
-typedef enum quote_calc_token {
-    OP_ADD = 257,
-    ADD = 258,
-    OP_SUB = 259,
-    SUB = 260,
-    OP_MUL = 261,
-    MUL = 262,
-    OP_DIV = 263,
-    DIV = 264,
-    OP_MOD = 265,
-    MOD = 266,
-    OP_AND = 267,
-    AND = 268,
-    DIGIT = 269,
-    LETTER = 270,
-    UMINUS = 271
-} quote_calc_token;
-#endif /* !YYTOKEN_IS_DECLARED */
+#define OP_ADD 257
+#define ADD 258
+#define OP_SUB 259
+#define SUB 260
+#define OP_MUL 261
+#define MUL 262
+#define OP_DIV 263
+#define DIV 264
+#define OP_MOD 265
+#define MOD 266
+#define OP_AND 267
+#define AND 268
+#define DIGIT 269
+#define LETTER 270
+#define UMINUS 271
