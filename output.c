@@ -1,4 +1,4 @@
-/* $Id: output.c,v 1.87 2018/05/10 09:08:46 tom Exp $ */
+/* $Id: output.c,v 1.100 2022/01/09 18:03:56 tom Exp $ */
 
 #include "defs.h"
 
@@ -96,7 +96,7 @@ write_code_lineno(FILE * fp)
     if (!lflag && (fp == code_file))
     {
 	++outline;
-	fprintf(fp, line_format, outline + 1, code_file_name);
+	fprintf_lineno(fp, outline + 1, code_file_name);
     }
 }
 
@@ -106,7 +106,7 @@ write_input_lineno(void)
     if (!lflag)
     {
 	++outline;
-	fprintf(code_file, line_format, lineno, input_file_name);
+	fprintf_lineno(code_file, lineno, input_file_name);
     }
 }
 
@@ -183,6 +183,27 @@ output_prefix(FILE * fp)
     if (CountLine(fp))
 	++outline;
     fprintf(fp, "#define YYPREFIX \"%s\"\n", symbol_prefix);
+}
+
+static void
+output_code_lines(FILE * fp, int cl)
+{
+    if (code_lines[cl].lines != NULL)
+    {
+	if (fp == code_file)
+	{
+	    outline += (int)code_lines[cl].num;
+	    outline += 3;
+	    fprintf(fp, "\n");
+	}
+	fprintf(fp, "/* %%code \"%s\" block start */\n", code_lines[cl].name);
+	fputs(code_lines[cl].lines, fp);
+	fprintf(fp, "/* %%code \"%s\" block end */\n", code_lines[cl].name);
+	if (fp == code_file)
+	{
+	    write_code_lineno(fp);
+	}
+    }
 }
 
 static void
@@ -351,12 +372,12 @@ output_yydefred(void)
 static void
 output_accessing_symbols(void)
 {
-    int i, j;
-    int *translate;
-
     if (nstates != 0)
     {
-	translate = TMALLOC(int, nstates);
+	int i, j;
+	int *translate;
+
+	translate = TCMALLOC(int, nstates);
 	NO_SPACE(translate);
 
 	for (i = 0; i < nstates; ++i)
@@ -421,7 +442,7 @@ token_actions(void)
     Value_t csym = -1;
     Value_t cbase = 0;
 #endif
-    int max, min;
+    Value_t max, min;
     Value_t *actionrow, *r, *s;
     action *p;
 
@@ -770,11 +791,9 @@ static int
 matching_vector(int vector)
 {
     int i;
-    int j;
     int k;
     int t;
     int w;
-    int match;
     int prev;
 
     i = order[vector];
@@ -786,19 +805,25 @@ matching_vector(int vector)
 
     for (prev = vector - 1; prev >= 0; prev--)
     {
-	j = order[prev];
+	int j = order[prev];
+
 	if (width[j] != w || tally[j] != t)
-	    return (-1);
-
-	match = 1;
-	for (k = 0; match && k < t; k++)
 	{
-	    if (tos[j][k] != tos[i][k] || froms[j][k] != froms[i][k])
-		match = 0;
+	    return (-1);
 	}
+	else
+	{
+	    int match = 1;
 
-	if (match)
-	    return (j);
+	    for (k = 0; match && k < t; k++)
+	    {
+		if (tos[j][k] != tos[i][k] || froms[j][k] != froms[i][k])
+		    match = 0;
+	    }
+
+	    if (match)
+		return (j);
+	}
     }
 
     return (-1);
@@ -809,7 +834,7 @@ pack_vector(int vector)
 {
     int i, j, k, l;
     int t;
-    int loc;
+    Value_t loc;
     int ok;
     Value_t *from;
     Value_t *to;
@@ -833,7 +858,7 @@ pack_vector(int vector)
 	ok = 1;
 	for (k = 0; ok && k < t; k++)
 	{
-	    loc = j + from[k];
+	    loc = (Value_t)(j + from[k]);
 	    if (loc >= maxtable - 1)
 	    {
 		if (loc >= MAXTABLE - 1)
@@ -872,7 +897,7 @@ pack_vector(int vector)
 	{
 	    for (k = 0; k < t; k++)
 	    {
-		loc = j + from[k];
+		loc = (Value_t)(j + from[k]);
 		table[loc] = to[k];
 		check[loc] = from[k];
 		if (loc > high)
@@ -892,7 +917,6 @@ pack_table(void)
 {
     int i;
     Value_t place;
-    int state;
 
     base = NEW2(nvectors, Value_t);
     pos = NEW2(nentries, Value_t);
@@ -909,7 +933,7 @@ pack_table(void)
 
     for (i = 0; i < nentries; i++)
     {
-	state = matching_vector(i);
+	int state = matching_vector(i);
 
 	if (state < 0)
 	    place = (Value_t)pack_vector(i);
@@ -1027,7 +1051,7 @@ output_table(void)
     if (high >= MAXYYINT)
     {
 	fprintf(stderr, "YYTABLESIZE: %ld\n", high);
-	fprintf(stderr, "Table is longer than %d elements.\n", MAXYYINT);
+	fprintf(stderr, "Table is longer than %ld elements.\n", (long)MAXYYINT);
 	done(1);
     }
 
@@ -1204,11 +1228,16 @@ static void
 output_defines(FILE * fp)
 {
     int c, i;
-    char *s;
+
+    if (fp == defines_file)
+    {
+	output_code_lines(fp, CODE_REQUIRES);
+    }
 
     for (i = 2; i < ntokens; ++i)
     {
-	s = symbol_name[i];
+	char *s = symbol_name[i];
+
 	if (is_C_identifier(s) && (!sflag || *s != '"'))
 	{
 	    fprintf(fp, "#define ");
@@ -1230,14 +1259,19 @@ output_defines(FILE * fp)
 	    }
 	    if (fp == code_file)
 		++outline;
-	    fprintf(fp, " %d\n", symbol_value[i]);
+	    fprintf(fp, " %ld\n", (long)symbol_value[i]);
 	}
     }
 
     if (fp == code_file)
 	++outline;
     if (fp != defines_file || iflag)
-	fprintf(fp, "#define YYERRCODE %d\n", symbol_value[1]);
+	fprintf(fp, "#define YYERRCODE %ld\n", (long)symbol_value[1]);
+
+    if (fp == defines_file)
+    {
+	output_code_lines(fp, CODE_PROVIDES);
+    }
 
     if (token_table && rflag && fp != externs_file)
     {
@@ -1264,7 +1298,10 @@ output_defines(FILE * fp)
 	}
 #if defined(YYBTYACC)
 	if (locations)
+	{
 	    output_ltype(fp);
+	    fprintf(fp, "extern YYLTYPE %slloc;\n", symbol_prefix);
+	}
 #endif
     }
 }
@@ -1275,9 +1312,9 @@ output_stored_text(FILE * fp)
     int c;
     FILE *in;
 
-    rewind(text_file);
     if (text_file == NULL)
 	open_error("text_file");
+    rewind(text_file);
     in = text_file;
     if ((c = getc(in)) == EOF)
 	return;
@@ -1306,7 +1343,7 @@ output_debug(void)
     const char *s;
 
     ++outline;
-    fprintf(code_file, "#define YYFINAL %d\n", final_state);
+    fprintf(code_file, "#define YYFINAL %ld\n", (long)final_state);
 
     outline += output_yydebug(code_file);
 
@@ -1338,7 +1375,7 @@ output_debug(void)
     fprintf(code_file, "#define YYTRANSLATE(a) ((a) > YYMAXTOKEN ? "
 	    "YYUNDFTOKEN : (a))\n");
 
-    symnam = TMALLOC(const char *, max + 2);
+    symnam = TCMALLOC(const char *, max + 2);
     NO_SPACE(symnam);
 
     /* Note that it is not necessary to initialize the element          */
@@ -1651,15 +1688,49 @@ static void
 output_semantic_actions(void)
 {
     int c, last;
+    int state;
+    char line_state[20];
 
     rewind(action_file);
     if ((c = getc(action_file)) == EOF)
 	return;
 
+    if (!lflag)
+    {
+	state = -1;
+	sprintf(line_state, line_format, 1, "");
+    }
+
     last = c;
     putc_code(code_file, c);
     while ((c = getc(action_file)) != EOF)
     {
+	/*
+	 * When writing the action file, we did not know the line-numbers in
+	 * the code-file, but wrote empty #line directives.  Detect those and
+	 * replace with proper #line directives.
+	 */
+	if (!lflag && (last == '\n' || state >= 0))
+	{
+	    if (c == line_state[state + 1])
+	    {
+		++state;
+		if (line_state[state + 1] == '\0')
+		{
+		    write_code_lineno(code_file);
+		    state = -1;
+		}
+		last = c;
+		continue;
+	    }
+	    else
+	    {
+		int n;
+		for (n = 0; n <= state; ++n)
+		    putc_code(code_file, line_state[n]);
+		state = -1;
+	    }
+	}
 	putc_code(code_file, c);
 	last = c;
     }
@@ -1922,8 +1993,8 @@ output_yydestruct_impl(void)
 		++outline;
 	    puts_code(code_file, destructor_code);
 	    putc_code(code_file, '\n');
-	    putl_code(code_file, "\tbreak;\n");
 	    write_code_lineno(code_file);
+	    putl_code(code_file, "\tbreak;\n");
 	    FREE(destructor_code);
 	}
     }
@@ -2002,6 +2073,7 @@ output(void)
     free_shifts();
     free_reductions();
 
+    output_code_lines(code_file, CODE_TOP);
 #if defined(YYBTYACC)
     output_backtracking_parser(output_file);
     if (rflag)
@@ -2048,10 +2120,6 @@ output(void)
 	output_externs(externs_file, global_vars);
 	if (!pure_parser)
 	    output_externs(externs_file, impure_vars);
-    }
-
-    if (iflag)
-    {
 	if (dflag)
 	{
 	    ++outline;
@@ -2081,22 +2149,30 @@ output(void)
     output_actions();
     free_parser();
     output_debug();
+
     if (rflag)
     {
 	write_section(code_file, xdecls);
 	output_YYINT_typedef(code_file);
 	write_section(code_file, tables);
     }
+
     write_section(code_file, global_vars);
     if (!pure_parser)
     {
 	write_section(code_file, impure_vars);
     }
+    output_code_lines(code_file, CODE_REQUIRES);
+
     write_section(code_file, hdr_defs);
     if (!pure_parser)
     {
 	write_section(code_file, hdr_vars);
     }
+
+    output_code_lines(code_file, CODE_PROVIDES);
+    output_code_lines(code_file, CODE_HEADER);
+
     output_trailing_text();
 #if defined(YYBTYACC)
     if (destructor)

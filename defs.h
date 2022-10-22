@@ -1,4 +1,4 @@
-/* $Id: defs.h,v 1.61 2019/06/16 15:07:51 tom Exp $ */
+/* $Id: defs.h,v 1.70 2021/08/01 22:21:53 tom Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -16,8 +16,8 @@
 #define class myClass
 #endif
 
-#define YYMAJOR 1
-#define YYMINOR 9
+#define YYMAJOR 2
+#define YYMINOR 0
 
 #define CONCAT(first,second)    first #second
 #define CONCAT1(string,number)  CONCAT(string, number)
@@ -48,7 +48,7 @@
 
 #define	MAXCHAR		UCHAR_MAX
 #ifndef MAXTABLE
-#define MAXTABLE	32500
+#define MAXTABLE	INT_MAX
 #endif
 #if MAXTABLE <= SHRT_MAX
 #define YYINT		short
@@ -58,6 +58,10 @@
 #define YYINT		int
 #define MAXYYINT	INT_MAX
 #define MINYYINT	INT_MIN
+#elif MAXTABLE <= LONG_MAX
+#define YYINT		long
+#define MAXYYINT	LONG_MAX
+#define MINYYINT	LONG_MIN
 #else
 #error "MAXTABLE is too large for this machine architecture!"
 #endif
@@ -101,39 +105,52 @@
 
 /* keyword codes */
 
-#define TOKEN 0
-#define LEFT 1
-#define RIGHT 2
-#define NONASSOC 3
-#define MARK 4
-#define TEXT 5
-#define TYPE 6
-#define START 7
-#define UNION 8
-#define IDENT 9
-#define EXPECT 10
-#define EXPECT_RR 11
-#define PURE_PARSER 12
-#define PARSE_PARAM 13
-#define LEX_PARAM 14
-#define POSIX_YACC 15
-#define TOKEN_TABLE 16
-#define ERROR_VERBOSE 17
-#define XXXDEBUG 18
+typedef enum
+{
+    TOKEN = 0
+    ,LEFT
+    ,RIGHT
+    ,NONASSOC
+    ,MARK
+    ,TEXT
+    ,TYPE
+    ,START
+    ,UNION
+    ,IDENT
+
+    /* trivial bison "extensions" which have POSIX equivalents */
+    ,NONPOSIX_DEBUG
+
+    /* other bison "extensions", some useful */
+    ,ERROR_VERBOSE
+    ,EXPECT
+    ,EXPECT_RR
+    ,LEX_PARAM
+    ,PARSE_PARAM
+    ,POSIX_YACC
+    ,PURE_PARSER
+    ,TOKEN_TABLE
+    ,XCODE
 
 #if defined(YYBTYACC)
-#define LOCATIONS 19
-#define DESTRUCTOR 20
-#define INITIAL_ACTION 21
+    ,DESTRUCTOR
+    ,INITIAL_ACTION
+    ,LOCATIONS
 #endif
+}
+KEY_CASES;
 
 /*  symbol classes  */
 
-#define UNKNOWN 0
-#define TERM 1
-#define NONTERM 2
-#define ACTION 3
-#define ARGUMENT 4
+typedef enum
+{
+    UNKNOWN = 0
+    ,TERM
+    ,NONTERM
+    ,ACTION
+    ,ARGUMENT
+}
+SYM_CASES;
 
 /*  the undefined value  */
 
@@ -150,7 +167,6 @@
 #define IS_NAME2(c)	(isalnum(UCH(c)) || (c) == '_' || (c) == '$')
 #define IS_IDENT(c)	(isalnum(UCH(c)) || (c) == '_' || (c) == '.' || (c) == '$')
 #define	IS_OCTAL(c)	((c) >= '0' && (c) <= '7')
-#define	NUMERIC_VALUE(c)	((c) - '0')
 
 /*  symbol macros  */
 
@@ -342,6 +358,10 @@ extern int ntags;
 extern char unionized;
 extern char line_format[];
 
+#define fprintf_lineno(f, n, s) \
+	    if (!lflag) \
+		fprintf(f, line_format, (n), (s))
+
 extern Value_t start_symbol;
 extern char **symbol_name;
 extern char **symbol_pname;
@@ -367,7 +387,7 @@ extern char *nullable;
 extern bucket *first_symbol;
 extern bucket *last_symbol;
 
-extern int nstates;
+extern Value_t nstates;
 extern core *first_state;
 extern shifts *first_shift;
 extern reductions *first_reduction;
@@ -404,22 +424,18 @@ extern param *parse_param;
 
 /* global functions */
 
+#ifdef HAVE_STDNORETURN_H
+#undef GCC_NORETURN
+#include <stdnoreturn.h>
+#define GCC_NORETURN _Noreturn
+#endif
+
 #ifndef GCC_NORETURN
-#if defined(__dead2)
-#define GCC_NORETURN		__dead2
-#elif defined(__dead)
-#define GCC_NORETURN		__dead
+#if defined(_MSC_VER)
+#define GCC_NORETURN		__declspec(noreturn)
 #else
 #define GCC_NORETURN		/* nothing */
 #endif
-#endif
-
-#ifdef __GNUC__
-#define ATTRIBUTE_NORETURN __attribute__((noreturn))
-#elif defined(_MSC_VER)
-#define ATTRIBUTE_NORETURN __declspec(noreturn)
-#else
-#define ATTRIBUTE_NORETURN
 #endif
 
 #if defined(NDEBUG) && defined(_MSC_VER)
@@ -456,76 +472,49 @@ struct ainfo
 
 extern void arg_number_disagree_warning(int a_lineno, char *a_name);
 extern void arg_type_disagree_warning(int a_lineno, int i, char *a_name);
-ATTRIBUTE_NORETURN
-extern void at_error(int a_lineno, char *a_line, char *a_cptr) GCC_NORETURN;
+extern GCC_NORETURN void at_error(int a_lineno, char *a_line, char *a_cptr);
 extern void at_warning(int a_lineno, int i);
-ATTRIBUTE_NORETURN
-extern void bad_formals(void) GCC_NORETURN;
+extern GCC_NORETURN void bad_formals(void);
 extern void default_action_warning(char *s);
 extern void destructor_redeclared_warning(const struct ainfo *);
-ATTRIBUTE_NORETURN
-extern void dollar_error(int a_lineno, char *a_line, char *a_cptr) GCC_NORETURN;
+extern GCC_NORETURN void dollar_error(int a_lineno, char *a_line, char *a_cptr);
 extern void dollar_warning(int a_lineno, int i);
-ATTRIBUTE_NORETURN
-extern void fatal(const char *msg) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void illegal_character(char *c_cptr) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void illegal_tag(int t_lineno, char *t_line, char *t_cptr) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void missing_brace(void) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void no_grammar(void) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void no_space(void) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void open_error(const char *filename) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void over_unionized(char *u_cptr) GCC_NORETURN;
+extern GCC_NORETURN void fatal(const char *msg);
+extern GCC_NORETURN void illegal_character(char *c_cptr);
+extern GCC_NORETURN void illegal_tag(int t_lineno, char *t_line, char *t_cptr);
+extern GCC_NORETURN void missing_brace(void);
+extern GCC_NORETURN void no_grammar(void);
+extern GCC_NORETURN void no_space(void);
+extern GCC_NORETURN void open_error(const char *filename);
+extern GCC_NORETURN void over_unionized(char *u_cptr);
 extern void prec_redeclared(void);
 extern void reprec_warning(char *s);
 extern void restarted_warning(void);
 extern void retyped_warning(char *s);
 extern void revalued_warning(char *s);
 extern void start_requires_args(char *a_name);
-ATTRIBUTE_NORETURN
-extern void syntax_error(int st_lineno, char *st_line, char *st_cptr) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void terminal_lhs(int s_lineno) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void terminal_start(char *s) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void tokenized_start(char *s) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void undefined_goal(char *s) GCC_NORETURN;
+extern GCC_NORETURN void syntax_error(int st_lineno, char *st_line, char *st_cptr);
+extern GCC_NORETURN void terminal_lhs(int s_lineno);
+extern GCC_NORETURN void terminal_start(char *s);
+extern GCC_NORETURN void tokenized_start(char *s);
+extern GCC_NORETURN void undefined_goal(char *s);
 extern void undefined_symbol_warning(char *s);
-ATTRIBUTE_NORETURN
-extern void unexpected_EOF(void) GCC_NORETURN;
+extern GCC_NORETURN void unexpected_EOF(void);
 extern void unknown_arg_warning(int d_lineno, const char *dlr_opt,
 				const char *d_arg, const char *d_line,
 				const char *d_cptr);
-ATTRIBUTE_NORETURN
-extern void unknown_rhs(int i) GCC_NORETURN;
+extern GCC_NORETURN void unknown_rhs(int i);
 extern void unsupported_flag_warning(const char *flag, const char *details);
-ATTRIBUTE_NORETURN
-extern void unterminated_action(const struct ainfo *) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void unterminated_comment(const struct ainfo *) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void unterminated_string(const struct ainfo *) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void unterminated_text(const struct ainfo *) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void unterminated_union(const struct ainfo *) GCC_NORETURN;
+extern GCC_NORETURN void unterminated_action(const struct ainfo *);
+extern GCC_NORETURN void unterminated_comment(const struct ainfo *);
+extern GCC_NORETURN void unterminated_string(const struct ainfo *);
+extern GCC_NORETURN void unterminated_text(const struct ainfo *);
+extern GCC_NORETURN void unterminated_union(const struct ainfo *);
 extern void untyped_arg_warning(int a_lineno, const char *dlr_opt, const char *a_name);
-ATTRIBUTE_NORETURN
-extern void untyped_lhs(void) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void untyped_rhs(int i, char *s) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void used_reserved(char *s) GCC_NORETURN;
-ATTRIBUTE_NORETURN
-extern void unterminated_arglist(const struct ainfo *) GCC_NORETURN;
+extern GCC_NORETURN void untyped_lhs(void);
+extern GCC_NORETURN void untyped_rhs(int i, char *s);
+extern GCC_NORETURN void used_reserved(char *s);
+extern GCC_NORETURN void unterminated_arglist(const struct ainfo *);
 extern void wrong_number_args_warning(const char *which, const char *a_name);
 extern void wrong_type_for_arg_warning(int i, char *a_name);
 
@@ -544,8 +533,7 @@ extern void show_shifts(void);
 
 /* main.c */
 extern void *allocate(size_t n);
-ATTRIBUTE_NORETURN
-extern void done(int k) GCC_NORETURN;
+extern GCC_NORETURN void done(int k);
 
 /* mkpar.c */
 extern void free_parser(void);
@@ -560,6 +548,7 @@ struct mstring
 extern void msprintf(struct mstring *, const char *, ...) GCC_PRINTFLIKE(2,3);
 extern int mputchar(struct mstring *, int);
 extern struct mstring *msnew(void);
+extern struct mstring *msrenew(char *);
 extern char *msdone(struct mstring *);
 extern int strnscmp(const char *, const char *);
 extern unsigned int strnshash(const char *);
@@ -573,6 +562,24 @@ extern void output(void);
 
 /* reader.c */
 extern void reader(void);
+
+typedef enum
+{
+    CODE_HEADER = 0
+    ,CODE_REQUIRES
+    ,CODE_PROVIDES
+    ,CODE_TOP
+    ,CODE_IMPORTS
+    ,CODE_MAX		/* this must be last */
+}
+CODE_CASES;
+extern struct code_lines
+{
+    const char *name;
+    char *lines;
+    size_t num;
+}
+code_lines[CODE_MAX];
 
 /* skeleton.c (generated by skel2c) */
 extern void write_section(FILE * fp, const char *const section[]);

@@ -20,7 +20,7 @@
 #endif
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
-typedef union {
+typedef union YYSTYPE {
     Scope	*scope;
     Expr	*expr;
     Expr_List	*elist;
@@ -46,5 +46,6 @@ typedef struct YYLTYPE
 #define YYLTYPE_IS_DECLARED 1
 #endif
 #define YYRHSLOC(rhs, k) ((rhs)[k])
+extern YYLTYPE demo_lloc;
 
 #endif /* _demo__defines_h_ */
