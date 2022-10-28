@@ -19,6 +19,7 @@ typedef enum ok_syntax1_token {
     UMINUS = 273
 } ok_syntax1_token;
 #endif /* !YYTOKEN_IS_DECLARED */
+ -1
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1

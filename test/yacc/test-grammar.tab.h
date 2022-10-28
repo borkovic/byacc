@@ -38,3 +38,4 @@ typedef enum grammar_token {
     T_VA_DCL = 291
 } grammar_token;
 #endif /* !YYTOKEN_IS_DECLARED */
+ -1
