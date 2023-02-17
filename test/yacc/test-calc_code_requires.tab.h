@@ -12,4 +12,3 @@ typedef enum calc_code_requires_token {
     UMINUS = 259
 } calc_code_requires_token;
 #endif /* !YYTOKEN_IS_DECLARED */
- -1

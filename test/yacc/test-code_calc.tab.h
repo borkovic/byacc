@@ -6,6 +6,5 @@ typedef enum calc_token {
     UMINUS = 259
 } calc_token;
 #endif /* !YYTOKEN_IS_DECLARED */
- -1
 #undef yytname
 #define yytname yyname

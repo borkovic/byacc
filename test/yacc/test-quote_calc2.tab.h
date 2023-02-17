@@ -18,4 +18,3 @@ typedef enum quote_calc2_token {
     UMINUS = 271
 } quote_calc2_token;
 #endif /* !YYTOKEN_IS_DECLARED */
- -1

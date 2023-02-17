@@ -7,7 +7,6 @@ typedef enum varsyntax_calc1_token {
     UMINUS = 260
 } varsyntax_calc1_token;
 #endif /* !YYTOKEN_IS_DECLARED */
- -1
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1

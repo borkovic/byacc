@@ -6,4 +6,3 @@ typedef enum yytoken {
     UMINUS = 259
 } yytoken;
 #endif /* !YYTOKEN_IS_DECLARED */
- -1
