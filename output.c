@@ -1301,7 +1301,6 @@ output_defines(FILE * fp)
 	    /* { */
 	    fprintf(fp, "\n} %s;\n", enum_name);
 	    fprintf(fp, "#endif /* !YYTOKEN_IS_DECLARED */\n");
-	    fprintf(fp, " %ld\n", (long)symbol_value[i]);
 	}
     }
 
