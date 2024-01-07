@@ -2,25 +2,34 @@
 /* config_h.in.  Generated automatically from configure.in by autoheader.  */
 
 /* Define to noreturn-attribute for gcc */
-/* #undef GCC_NORETURN */
+#define GCC_NORETURN __attribute__((noreturn))
 
 /* Define to 1 if the compiler supports gcc-like printf attribute. */
-/* #undef GCC_PRINTF */
+#define GCC_PRINTF 1
 
 /* Define to printf-attribute for gcc */
-/* #undef GCC_PRINTFLIKE */
+#define GCC_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
 
 /* Define to 1 if the compiler supports gcc-like scanf attribute. */
-/* #undef GCC_SCANF */
+#define GCC_SCANF 1
 
 /* Define to sscanf-attribute for gcc */
-/* #undef GCC_SCANFLIKE */
+#define GCC_SCANFLIKE(fmt,var) __attribute__((format(scanf,fmt,var)))
 
 /* Define to unused-attribute for gcc */
-/* #undef GCC_UNUSED */
+#define GCC_UNUSED __attribute__((unused))
 
 /* Define if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
+
+/* Define if you have the `getopt' function. */
+#define HAVE_GETOPT 1
+
+/* Define if you have the <getopt.h> header file. */
+#define HAVE_GETOPT_H 1
+
+/* Define to 1 if getopt variables are declared in header */
+#define HAVE_GETOPT_HEADER 1
 
 /* Define if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -42,6 +51,9 @@
 
 /* Define if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
+
+/* Define if <stdnoreturn.h> header is available and working */
+/* #undef HAVE_STDNORETURN_H */
 
 /* Define if you have the <strings.h> header file. */
 #define HAVE_STRINGS_H 1
@@ -67,11 +79,17 @@
 /* Define to 1 if filesystem supports mixed-case filenames. */
 #define MIXEDCASE_FILENAMES 1
 
+/* Define to 1 if we must include getopt.h */
+/* #undef NEED_GETOPT_H */
+
 /* Define to 1 if you want to perform memory-leak testing. */
 /* #undef NO_LEAKS */
 
 /* Define if you have the ANSI C header files. */
 #define STDC_HEADERS 1
+
+/* Define if C11 _Noreturn keyword is supported */
+/* #undef STDC_NORETURN */
 
 /* Define to the system name. */
 #define SYSTEM_NAME "linux-gnu"
@@ -86,7 +104,7 @@
 /* #undef USE_VALGRIND */
 
 /* Define to 1 to enable backtracking extension */
-/* #undef YYBTYACC */
+#define YYBTYACC 1
 
 /* Define to 1 if you want to perform memory-leak testing. */
 /* #undef YY_NO_LEAKS */
