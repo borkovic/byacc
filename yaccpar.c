@@ -126,10 +126,11 @@ const char *const body_vars[] =
     "    int      yychar;",
     "    YYSTYPE  yyval;",
     "    YYSTYPE  yylval;",
-    "    int      yynerrs;",
+    "    int      yynerrs ;",
     "",
     "    /* variables for the parser stack */",
     "    YYSTACKDATA yystack;",
+    "    (void)(yynerrs);",
     0
 };
 

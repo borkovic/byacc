@@ -244,6 +244,7 @@ const char *const body_vars[] =
     "",
     "    /* variables for the parser stack */",
     "    YYSTACKDATA yystack;",
+    "    (void)(yynerrs);",
 #if defined(YYBTYACC)
     "#if YYBTYACC",
     "",
