@@ -1,4 +1,4 @@
-/* $Id: reader.c,v 1.104 2023/05/18 21:18:17 tom Exp $ */
+/* $Id: reader.c,v 1.106 2024/12/31 19:39:49 tom Exp $ */
 
 #include "defs.h"
 
@@ -23,7 +23,7 @@
 /* limit the size of optional names for %union */
 #define NAME_LEN 32
 
-#define IS_ALNUM(c) (isalnum(c) || (c) == '_')
+#define IS_ALNUM(c) (isalnum(UCH(c)) || (c) == '_')
 
 #define begin_case(f,n) fprintf(f, "case %d:\n", (int)(n))
 
@@ -110,7 +110,7 @@ struct code_lines code_lines[CODE_MAX];
 int destructor = 0;	/* =1 if at least one %destructor */
 
 static bucket *default_destructor[3] =
-{0, 0, 0};
+{NULL, NULL, NULL};
 
 #define UNTYPED_DEFAULT 0
 #define TYPED_DEFAULT   1
@@ -353,9 +353,9 @@ get_line(void)
 	    if (line)
 	    {
 		FREE(line);
-		line = 0;
+		line = NULL;
 	    }
-	    cptr = 0;
+	    cptr = NULL;
 	    saw_eof = 1;
 	    return;
 	}
@@ -1204,7 +1204,7 @@ save_param(int k, char *buffer, int name, int type2)
 	}
 	while (n > 0)
 	{
-	    if (!IS_ALNUM(UCH(buffer[n - 1])))
+	    if (!IS_ALNUM(buffer[n - 1]))
 		break;
 	    --n;
 	}
@@ -1250,7 +1250,7 @@ copy_param(int k)
     int c;
     int name, type2;
     int curly = 0;
-    char *buf = 0;
+    char *buf = NULL;
     int i = -1;
     size_t buf_size = 0;
     int st_lineno = lineno;
@@ -1303,7 +1303,7 @@ copy_param(int k)
 	    }
 	    break;
 	}
-	if (buf == 0)
+	if (buf == NULL)
 	{
 	    buf_size = (size_t)linesize;
 	    buf = TMALLOC(char, buf_size);
@@ -1359,7 +1359,7 @@ copy_param(int k)
     {
 	char *parms = (comma + 1);
 	comma = strchr(parms, ',');
-	if (comma != 0)
+	if (comma != NULL)
 	    *comma = '\0';
 
 	(void)trim_blanks(parms);
@@ -1397,7 +1397,7 @@ copy_param(int k)
 	    type2 = i + 1;
 	}
 
-	while (i > 0 && IS_ALNUM(UCH(parms[i])))
+	while (i > 0 && IS_ALNUM(parms[i]))
 	    i--;
 
 	if (!isspace(UCH(parms[i])) && parms[i] != '*')
@@ -1407,7 +1407,7 @@ copy_param(int k)
 
 	save_param(k, parms, name, type2);
     }
-    while (comma != 0);
+    while (comma != NULL);
     FREE(buf);
     return;
 
@@ -1533,7 +1533,7 @@ get_literal(void)
     }
     end_ainfo(a);
 
-    n = cinc;
+    n = cinc ? cinc : 1;
     s = TMALLOC(char, n);
     NO_SPACE(s);
 
@@ -1738,7 +1738,7 @@ scan_id(void)
 {
     char *b = cptr;
 
-    while (IS_NAME2(UCH(*cptr)))
+    while (IS_NAME2(*cptr))
 	cptr++;
     return cache_tag(b, (size_t)(cptr - b));
 }
@@ -1750,7 +1750,7 @@ declare_tokens(int assoc)
     int c;
     bucket *bp;
     Value_t value;
-    char *tag = 0;
+    char *tag = NULL;
 
     if (assoc != TOKEN)
 	++prec;
@@ -2153,10 +2153,10 @@ initialize_grammar(void)
     pitem = TMALLOC(bucket *, maxitems);
     NO_SPACE(pitem);
 
-    pitem[0] = 0;
-    pitem[1] = 0;
-    pitem[2] = 0;
-    pitem[3] = 0;
+    pitem[0] = NULL;
+    pitem[1] = NULL;
+    pitem[2] = NULL;
+    pitem[3] = NULL;
 
     nrules = 3;
     maxrules = 100;
@@ -2164,9 +2164,9 @@ initialize_grammar(void)
     plhs = TMALLOC(bucket *, maxrules);
     NO_SPACE(plhs);
 
-    plhs[0] = 0;
-    plhs[1] = 0;
-    plhs[2] = 0;
+    plhs[0] = NULL;
+    plhs[1] = NULL;
+    plhs[2] = NULL;
 
     rprec = TMALLOC(Value_t, maxrules);
     NO_SPACE(rprec);
@@ -2278,7 +2278,7 @@ parse_id(char *p, char **save)
     if (!isalpha(UCH(*p)) && *p != '_')
 	return NULL;
     b = p;
-    while (IS_NAME2(UCH(*p)))
+    while (IS_NAME2(*p))
 	p++;
     if (save)
     {
@@ -2488,7 +2488,7 @@ can_elide_arg(char **theptr, char *yyvaltag)
     int i, n = 0;
     Value_t *offsets = NULL, maxoffset = 0;
     bucket **rhs;
-    char *tag = 0;
+    char *tag = NULL;
 
     if (*p++ != '$')
 	return 0;
@@ -2563,7 +2563,7 @@ can_elide_arg(char **theptr, char *yyvaltag)
 	rv = 0;
     if (maxoffset > 0)
 	FREE(offsets);
-    if (p == 0 || *p || rv <= 0)
+    if (p == NULL || *p || rv <= 0)
 	return 0;
     *theptr = p + 1;
     return rv;
@@ -2667,7 +2667,7 @@ advance_to_start(void)
     if (!isalpha(UCH(c)) && c != '_' && c != '.' && c != '_')
 	syntax_error(lineno, line, cptr);
     bp = get_name();
-    if (goal == 0)
+    if (goal == NULL)
     {
 	if (bp->class == TERM)
 	    terminal_start(bp->name);
@@ -2723,7 +2723,7 @@ end_rule(void)
 
 	    for (i = nitems - 1; (i > 0) && pitem[i]; --i)
 		continue;
-	    if (pitem[i + 1] == 0 || pitem[i + 1]->tag != plhs[nrules]->tag)
+	    if (pitem[i + 1] == NULL || pitem[i + 1]->tag != plhs[nrules]->tag)
 		default_action_warning(plhs[nrules]->name);
 	}
 	else
@@ -2733,7 +2733,7 @@ end_rule(void)
     last_was_action = 0;
     if (nitems >= maxitems)
 	expand_items();
-    pitem[nitems] = 0;
+    pitem[nitems] = NULL;
     ++nitems;
     ++nrules;
 }
@@ -2760,7 +2760,7 @@ insert_empty_rule(void)
 	expand_items();
     bpp = pitem + nitems - 1;
     *bpp-- = bp;
-    while ((bpp[0] = bpp[-1]) != 0)
+    while ((bpp[0] = bpp[-1]) != NULL)
 	--bpp;
 
     if (++nrules >= maxrules)
@@ -2863,7 +2863,7 @@ add_symbol(void)
     }
     else if (bp->args != argslen)
 	wrong_number_args_warning("", bp->name);
-    if (args != 0)
+    if (args != NULL)
     {
 	char *ap = args;
 	int i = 0;
@@ -3035,7 +3035,7 @@ copy_action(void)
 	    if (havetags)
 	    {
 		tag = plhs[nrules]->tag;
-		if (tag == 0)
+		if (tag == NULL)
 		    untyped_lhs();
 		fprintf(f, "yyval.%s", tag);
 	    }
@@ -3056,7 +3056,7 @@ copy_action(void)
 		if (i <= 0 || i > maxoffset)
 		    unknown_rhs(i);
 		tag = rhs[offsets[i]]->tag;
-		if (tag == 0)
+		if (tag == NULL)
 		    untyped_rhs(i, rhs[offsets[i]]->name);
 		fprintf(f, "yystack.l_mark[%ld].%s", (long)offsets[i], tag);
 	    }
@@ -3671,7 +3671,7 @@ free_tags(void)
 {
     int i;
 
-    if (tag_table == 0)
+    if (tag_table == NULL)
 	return;
 
     for (i = 0; i < ntags; ++i)
@@ -3813,8 +3813,8 @@ pack_symbols(void)
     v = TMALLOC(bucket *, nsyms);
     NO_SPACE(v);
 
-    v[0] = 0;
-    v[start_symbol] = 0;
+    v[0] = NULL;
+    v[start_symbol] = NULL;
 
     i = 1;
     j = (Value_t)(start_symbol + 1);
@@ -3862,7 +3862,7 @@ pack_symbols(void)
 	}
     }
 
-    assert(v[1] != 0);
+    assert(v[1] != NULL);
 
     if (v[1]->value == UNDEFINED)
 	v[1]->value = 256;
@@ -4174,7 +4174,7 @@ reader(void)
 static param *
 free_declarations(param *list)
 {
-    while (list != 0)
+    while (list != NULL)
     {
 	param *next = list->next;
 	free(list->type);
